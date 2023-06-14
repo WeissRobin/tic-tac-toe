@@ -79,36 +79,29 @@ const gameEngine = (() => {
             }
         } 
     }
-    const checkDiag = (x, y) => {
-        const firstDiag = (x, y) => {
-            this.x = x;
-            this.y = y;
-            for (let x = 0; x < gameBoard.getBoard().length; x++) {
-                for (let y = x; y < x + 1; y++) {
-                    if(gameBoard.getBoard()[x][y] != getActivePlayer()) {
-                        break;
-                    }
-                    if(x == gameBoard.getBoard().length - 1){
-                        return true;
-                    }
+    const checkDiag = () => {
+        let board = gameBoard.getBoard();
+        const firstDiag = () => {
+            for (let i = 0; i < board.length; i++) {
+                if(board[i][i] != getActivePlayer()) {
+                    break;
+                }
+                if(i == board.length - 1) {
+                    return true;
                 }
             }
         }
-        const secondDiag = (x, y) => {
-            this.x = x;
-            this.y = y;
-            for (let x = 0; x < gameBoard.getBoard().length; x++) {
-                for (let y = (gameBoard.getBoard().length - x) - 1; y > -x + 1; y--) {
-                    if(gameBoard.getBoard()[x][y] != getActivePlayer()) {
-                        break;
-                    }
-                    if(x == gameBoard.getBoard().length - 1){
-                        return true;
-                    }
+        const secondDiag = () => {
+            for (let i = 0; i < board.length; i++) {
+                if((board[(board.length - 1) - i][i]) != getActivePlayer()) {
+                    break;
+                }
+                if(i == board.length - 1) {
+                    return true;
                 }
             }
         }
-        if(firstDiag(x, y) || secondDiag(x, y)){
+        if(firstDiag() || secondDiag()) {
             return true;
         }
     }
