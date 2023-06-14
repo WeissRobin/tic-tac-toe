@@ -54,9 +54,7 @@ const gameEngine = (() => {
     }
     const newRound = (x, y) => {
         if(activePlayer.makeMove(x, y, getActivePlayer())) {
-            checkRow(x);
-            checkColumn(y);
-            checkdDiag();       
+            checkWin(x, y);
             switchPlayers();
         }
     }
@@ -81,16 +79,42 @@ const gameEngine = (() => {
             }
         } 
     }
-    const checkdDiag = (x, y) => {
+    const checkDiag = (x, y) => {
         const firstDiag = (x, y) => {
-            for (let i = 0; i < gameBoard.getBoard().length; i++) {
-                if(gameBoard.getBoard()[i][y] != getActivePlayer()) {
-                    break;
+            this.x = x;
+            this.y = y;
+            for (let x = 0; x < gameBoard.getBoard().length; x++) {
+                for (let y = x; y < x + 1; y++) {
+                    if(gameBoard.getBoard()[x][y] != getActivePlayer()) {
+                        break;
+                    }
+                    if(x == gameBoard.getBoard().length - 1){
+                        return true;
+                    }
                 }
-                if(i == gameBoard.getBoard().length - 1){
-                    return true;
+            }
+        }
+        const secondDiag = (x, y) => {
+            this.x = x;
+            this.y = y;
+            for (let x = 0; x < gameBoard.getBoard().length; x++) {
+                for (let y = (gameBoard.getBoard().length - x) - 1; y > -x + 1; y--) {
+                    if(gameBoard.getBoard()[x][y] != getActivePlayer()) {
+                        break;
+                    }
+                    if(x == gameBoard.getBoard().length - 1){
+                        return true;
+                    }
                 }
-            } 
+            }
+        }
+        if(firstDiag(x, y) || secondDiag(x, y)){
+            return true;
+        }
+    }
+    const checkWin = (x, y) => {
+        if(checkDiag(x, y) || checkRow(x) || checkColumn(y)) {
+            console.log("Vyhrál: " + getActivePlayer());
         }
     }
     return { newRound, switchPlayers, getActivePlayer }
