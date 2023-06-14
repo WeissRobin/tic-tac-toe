@@ -16,9 +16,10 @@ const gameBoard = (() => {
     const makeMove = (x, y, symbol) => {
         if(checkMove(x, y) == true){
             board[x][y] = symbol;
+            return true;
         }
         else {
-            console.log('Illegal Move');
+            return false;
         }
     }
     const checkMove = (x, y) => {
@@ -52,18 +53,52 @@ const gameEngine = (() => {
         activePlayer == playerX ? activePlayer = playerO : activePlayer = playerX;
     }
     const newRound = (x, y) => {
-        activePlayer.makeMove(x, y, getActivePlayer());
-        switchPlayers();
+        if(activePlayer.makeMove(x, y, getActivePlayer())) {
+            checkRow(x);
+            checkColumn(y);
+            checkdDiag();       
+            switchPlayers();
+        }
     }
     const getActivePlayer = () => activePlayer.getSymbol();
-
-    const { printBoard } = gameBoard;
-    return { newRound, printBoard, switchPlayers, getActivePlayer }
+    const checkRow = (x) => {
+        for (let i = 0; i < gameBoard.getBoard().length; i++) {
+            if(gameBoard.getBoard()[x][i] != getActivePlayer()) {
+                break;
+            }
+            if(i == gameBoard.getBoard().length - 1){
+                return true;
+            }
+        }
+    }
+    const checkColumn = (y) => {
+        for (let i = 0; i < gameBoard.getBoard().length; i++) {
+            if(gameBoard.getBoard()[i][y] != getActivePlayer()) {
+                break;
+            }
+            if(i == gameBoard.getBoard().length - 1){
+                return true;
+            }
+        } 
+    }
+    const checkdDiag = (x, y) => {
+        const firstDiag = (x, y) => {
+            for (let i = 0; i < gameBoard.getBoard().length; i++) {
+                if(gameBoard.getBoard()[i][y] != getActivePlayer()) {
+                    break;
+                }
+                if(i == gameBoard.getBoard().length - 1){
+                    return true;
+                }
+            } 
+        }
+    }
+    return { newRound, switchPlayers, getActivePlayer }
 })();
 
 //Function for updating and displaying board into the DOM
 function displayController() {
-    //Initializing of elements I will use for modifycation
+    //Initializing of elements I will use for modification
     const game_board = document.querySelector('.game-board');
     const board = gameBoard.getBoard();
     let active_player = document.querySelector('#active-player-text'); 
@@ -95,7 +130,7 @@ function displayController() {
             gameEngine.newRound(x, y);
             updateScreen();
         } else {
-            console.log("seš dement");
+            console.log("Click on a board! O_O");
         }
     }
 
