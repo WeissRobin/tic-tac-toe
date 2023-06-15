@@ -58,7 +58,7 @@ const gameEngine = (() => {
         let board = gameBoard.getBoard();
         const checkRow = () => {
             for (let i = 0; i < board.length; i++) {
-                if(gameBoard.getBoard()[x][i] != getActivePlayer()) {
+                if(board[x][i] != getActivePlayer()) {
                     break;
                 }
                 if(i == board.length - 1){
