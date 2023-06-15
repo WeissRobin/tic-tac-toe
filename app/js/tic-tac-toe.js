@@ -47,24 +47,58 @@ const gameEngine = (() => {
     const newRound = (x, y) => {
         if(gameBoard.checkMove(x, y)) {
             activePlayer.makeMove(x, y, getActivePlayer());
+            checkWin();
             switchPlayers();
         }
         else {
             console.log('Illegal move');
         }
     }
-    const checkWin = (symbol) => {
-        for(let i = 0 ; i < gameBoard.getBoard().length ; i++) {
-            for(let j = 0 ; j < 3; j++) {
-                if(symbol == array[i][j]) {
-                    continue;
+    const checkWin = () => {
+        let board = gameBoard.getBoard();
+        const checkRow = () => {
+            for (let i = 0; i < board.length; i++) {
+                if(gameBoard.getBoard()[x][i] != getActivePlayer()) {
+                    break;
                 }
-                else {
-                    return false;
+                if(i == board.length - 1){
+                    return true;
                 }
             }
         }
-        return true;
+        const checkColumn = () => {
+            for (let i = 0; i < board.length; i++) {
+                if(board[i][y] != getActivePlayer()) {
+                    break;
+                }
+                if(i == board.length - 1){
+                    return true;
+                }
+            } 
+        }  
+        const firstDiag = () => {
+            for (let i = 0; i < board.length; i++) {
+                if(board[i][i] != getActivePlayer()) {
+                    break;
+                }
+                if(i == board.length - 1) {
+                    return true;
+                }
+            }
+        }
+        const secondDiag = () => {
+            for (let i = 0; i < board.length; i++) {
+                if((board[(board.length - 1) - i][i]) != getActivePlayer()) {
+                    break;
+                }
+                if(i == board.length - 1) {
+                    return true;
+                }
+            }
+        }
+        if(checkRow() == true || checkColumn() == true || firstDiag() == true || secondDiag() == true) {
+            console.log("vyhrál: " + getActivePlayer());
+        }
     }
     const getActivePlayer = () => activePlayer.getSymbol();
     return { newRound, switchPlayers, getActivePlayer }
