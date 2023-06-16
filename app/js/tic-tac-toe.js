@@ -51,7 +51,12 @@ const gameEngine = (() => {
             switchPlayers();
         }
         else {
-            console.log('Illegal move');
+            const mess = document.getElementById('cell-message');
+            mess.textContent = 'This cell is already taken!';
+            mess.style.display = 'block';
+            mess.addEventListener('animationend', () => {
+                mess.style.display = 'none';
+            });
         }
     }
     const checkWin = () => {
@@ -96,8 +101,28 @@ const gameEngine = (() => {
                 }
             }
         }
+        const draw = () => {
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board.length; j++) {
+                    if(board[i][j] == "-") {
+                        return false;
+                    }
+                    if(i == board.length - 1 && j == board.length - 1){
+                        return true;
+                    }
+                }
+            }
+        }
+
         if(checkRow() == true || checkColumn() == true || firstDiag() == true || secondDiag() == true) {
-            console.log("vyhrál: " + getActivePlayer());
+            const winMessage = document.getElementById('win-message');
+            winMessage.style.display = 'block';
+            winMessage.textContent = `Player: ${getActivePlayer()} Wins`;
+        }
+        else if(draw() == true) {
+            const winMessage = document.getElementById('win-message');
+            winMessage.style.display = 'block';
+            winMessage.textContent = `Draw!`;
         }
     }
     const getActivePlayer = () => activePlayer.getSymbol();
@@ -109,10 +134,12 @@ function displayController() {
     //Initializing of elements I will use for modification
     const game_board = document.querySelector('.game-board');
     const board = gameBoard.getBoard();
+    const restart_btn = document.getElementById('restart-btn');
     let active_player = document.querySelector('#active-player-text'); 
 
     //Function for updating DOM board
     const updateScreen = () => {
+        game_board.textContent = "";
         active_player.textContent = `It's Player'${gameEngine.getActivePlayer()} turn`;
         board.forEach((row, row_index) => {
             const game_row = document.createElement('div');
@@ -132,7 +159,6 @@ function displayController() {
     //What happens when we click on a button from a board
     function clickHandlerBoard(e) {
         if(e.target.classList.contains('game-cell')) {
-            game_board.textContent = "";
             x = e.target.dataset.row;
             y = e.target.dataset.cell;
             gameEngine.newRound(x, y);
@@ -142,8 +168,16 @@ function displayController() {
         }
     }
 
+    function restartGame() {
+        const winMessage = document.getElementById('win-message');
+        winMessage.style.display = 'none';
+        gameBoard.generateBoard();
+        updateScreen();
+    }
+
     //Adding eventlistener for game board
     game_board.addEventListener('click', clickHandlerBoard);
+    restart_btn.addEventListener('click', restartGame);
 
     //Initializing board for the first time into the DOM
     updateScreen();
