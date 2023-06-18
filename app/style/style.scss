@@ -31,6 +31,17 @@ main {
     flex-direction: row;
 }
 
+.game-cell-end {
+    font-size: 3rem;
+    color: $text--clr;
+    width: $cell-size;
+    height: $cell-size;
+    margin: .5em;
+    background-color: rgba($accent--clr, .2);
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
 .game-cell {
     font-size: 3rem;
     color: $text--clr;

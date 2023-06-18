@@ -60,6 +60,7 @@ const gameEngine = (() => {
         }
     }
     const checkWin = () => {
+        const game_board = document.querySelector('.game-board');
         let board = gameBoard.getBoard();
         const checkRow = () => {
             for (let i = 0; i < board.length; i++) {
@@ -135,6 +136,7 @@ function displayController() {
     const game_board = document.querySelector('.game-board');
     const board = gameBoard.getBoard();
     const restart_btn = document.getElementById('restart-btn');
+    const mess = document.getElementById('win-message');
     let active_player = document.querySelector('#active-player-text'); 
 
     //Function for updating DOM board
@@ -154,8 +156,14 @@ function displayController() {
                 game_row.appendChild(game_cell);
             });
         });
+        if(mess.style.display == 'block') {
+            game_board.removeEventListener('click', clickHandlerBoard);
+            ClassesHandeler();
+        }
+        else {
+            game_board.addEventListener('click', clickHandlerBoard);
+        }
     }
-     
     //What happens when we click on a button from a board
     function clickHandlerBoard(e) {
         if(e.target.classList.contains('game-cell')) {
@@ -168,10 +176,25 @@ function displayController() {
         }
     }
 
+    function ClassesHandeler() {
+        const gameCells = document.querySelectorAll('.game-cell');
+        gameCells.forEach((cell) => {
+            if(cell.classList.contains('game-cell')) {
+                cell.classList.add('game-cell-end');
+                cell.classList.remove('game-cell');
+            }
+            else {
+                cell.classList.remove('game-cell-end');
+                cell.classList.add('game-cell');
+            }
+        });
+    }
+
     function restartGame() {
         const winMessage = document.getElementById('win-message');
         winMessage.style.display = 'none';
         gameBoard.generateBoard();
+        ClassesHandeler();
         updateScreen();
     }
 

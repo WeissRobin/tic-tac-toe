@@ -30,6 +30,17 @@ main {
   flex-direction: row;
 }
 
+.game-cell-end {
+  font-size: 3rem;
+  color: white;
+  width: 130px;
+  height: 130px;
+  margin: 0.5em;
+  background-color: rgba(87, 84, 120, 0.2);
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
 .game-cell {
   font-size: 3rem;
   color: white;
